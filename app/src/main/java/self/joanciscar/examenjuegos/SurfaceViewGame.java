@@ -35,6 +35,7 @@ public class SurfaceViewGame extends SurfaceView implements SurfaceHolder.Callba
 
     private Bitmap drawnedBitmap;
 
+    private boolean moving = false;
     private final int STOPPED = 0;
     private final int RUNNING = 1;
     private int counter = 0;
@@ -85,6 +86,9 @@ public class SurfaceViewGame extends SurfaceView implements SurfaceHolder.Callba
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
                 if(currentStateButton != STOPPED) {
+                    if(y > height - height/7f) {
+                        break;
+                    }
                     Bala b = new Bala();
                     b.setPosX(player.getPosX());
                     b.setPosY(player.getPosY() - 20);
@@ -94,14 +98,17 @@ public class SurfaceViewGame extends SurfaceView implements SurfaceHolder.Callba
                 break;
             case MotionEvent.ACTION_MOVE: // mantener pulsado
                 if(currentStateButton != STOPPED) {
-                    if (x > player.getPosX() - player.getRadius() && x < player.getPosX() + player.getRadius()) {
-                        if (y > player.getPosY() - player.getRadius() && y < player.getPosY() + player.getRadius()) {
-                            player.setPosX((float) x);
-                        }
+                    if(moving) {
+                        player.setPosX((float) x);
                     }
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
+                if (x > player.getPosX() - player.getRadius() && x < player.getPosX() + player.getRadius()) {
+                    if (y > player.getPosY() - player.getRadius() && y < player.getPosY() + player.getRadius()) {
+                        moving = true;
+                    }
+                }
                 if(y > height - height/7f) {
                     currentStateButton = currentStateButton == 1 ? 0 : 1;
                     asteroid = new Asteroid(1,height,width,asteroid_bitmap);
@@ -124,12 +131,7 @@ public class SurfaceViewGame extends SurfaceView implements SurfaceHolder.Callba
             asteroid.paint(canvas);
         }
         player.paint(canvas);
-        if(counter < 10) {
-            canvas.drawText(String.valueOf(counter),canvas.getWidth()/2f,canvas.getHeight()/2f,text_painter);
-        }
-        else {
-            canvas.drawText("Game over",canvas.getWidth()/2f,canvas.getHeight()/2f,text_painter);
-        }
+        canvas.drawText(String.valueOf(counter),canvas.getWidth()/2f,canvas.getHeight()/2f,text_painter);
         for (Bala b :balaList) {
             b.paint(canvas);
         }
@@ -167,10 +169,10 @@ public class SurfaceViewGame extends SurfaceView implements SurfaceHolder.Callba
                     }
                 }
                 if (currentStateButton == STOPPED) {
-                    drawnedBitmap = mutableButtonStop;
+                    drawnedBitmap = mutableButtonStart;
                 }
                 else {
-                    drawnedBitmap = mutableButtonStart;
+                    drawnedBitmap = mutableButtonStop;
                 }
                 Canvas canvas = null;
                 try {

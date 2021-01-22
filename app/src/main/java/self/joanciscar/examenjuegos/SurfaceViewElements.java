@@ -133,10 +133,10 @@ public class SurfaceViewElements extends SurfaceView implements SurfaceHolder.Ca
 
             while (!stop) {
                 if (currentStateButton == STOPPED) {
-                    drawnedBitmap = mutableButtonStop;
+                    drawnedBitmap = mutableButtonStart;
                 }
                 else {
-                    drawnedBitmap = mutableButtonStart;
+                    drawnedBitmap = mutableButtonStop;
                 }
                 Canvas canvas = null;
                 try {
